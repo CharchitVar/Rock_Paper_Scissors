@@ -1,10 +1,81 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import { choice } from './choice';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  ngOnInit(): void {
+    
+  }
   title = 'Game';
+  compChoice: string;
+  compChoiceId: number;
+  userChoiceId: number;
+  computerScore: number = 0;
+  playerScore: number= 0;
+  userChoice: string;
+  status: string;
+  
+
+  userSelected(value: string){
+    switch(value)
+    {
+      case 'rock':{
+        this.userChoiceId=1;
+        break;
+      }
+      case 'paper':{
+        this.userChoiceId=2;
+        break;
+      }
+      case 'scissors':{
+        this.userChoiceId=3;
+      }
+    }
+    
+    
+    const randomNum = Math.floor(Math.random() * 3);
+    this.compChoiceId=randomNum+1;
+    this.compChoice=choice[this.compChoiceId];
+    this.userChoice = value;
+   this.checkResult(this.userChoiceId, this.compChoiceId)
+  }
+  checkResult(userChoice: number, compChoice: number){
+    if(userChoice === compChoice){
+      this.status = `It's a draw`
+    this.renableTheChoice();
+    }
+    else{
+      if((userChoice === 1 && compChoice === 3)|| (userChoice === 2 && compChoice === 1) || (userChoice ===3 && compChoice===2)){
+        
+        this.playerScore++;
+        this.status = `Player Win`;
+        this.renableTheChoice();
+      }
+      else{
+        this.computerScore++;
+        this.status = `Computer Win`;
+        this.renableTheChoice();
+      }
+    }
+
+  }
+  renableTheChoice(){
+    setTimeout(()=>{
+      this.compChoice='';
+      this.userChoice ='';
+      this.status ='';
+    },2000)
+  }
+  onNewGameClicked(){
+    this.playerScore = 0;
+    this.compChoice ='';
+    this.status ='';
+    this.userChoice ='';
+    this.computerScore =0;
+
+  }
 }
